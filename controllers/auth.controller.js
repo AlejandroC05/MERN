@@ -21,10 +21,15 @@ function register(req, res){
     const salt = bcrypt.genSaltSync(10)
     const hashPassword = bcrypt.hashSync(password, salt)
 
-    console.log(password)
-    console.log(hashPassword)
+    user.password = hashPassword
 
-    res.status(200).send({msg:"Funcionó perfecto!"})
+    user.save((error, userStorage) => {
+        if(error){
+            res.status(400).send({msg: "Error al crear el usuario"})
+        } else {
+            res.status(200).send(userStorage)
+        }
+    })
 }
 
 module.exports = {
